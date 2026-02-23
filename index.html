@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Saha Satış Asistanı</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background-color: #f4f4f9; padding: 20px; margin: 0; }
+        .container { max-width: 500px; margin: auto; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        h2 { text-align: center; color: #333; }
+        input { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 8px; box-sizing: border-box; font-size: 16px; }
+        .product { display: flex; justify-content: space-between; align-items: center; padding: 15px 0; border-bottom: 1px solid #eee; }
+        .product-name { font-size: 18px; font-weight: bold; color: #444; }
+        .controls button { width: 40px; height: 40px; font-size: 20px; border: none; border-radius: 8px; cursor: pointer; color: white; }
+        .btn-minus { background-color: #ff4d4d; }
+        .btn-plus { background-color: #4CAF50; }
+        .count { font-size: 20px; font-weight: bold; width: 40px; display: inline-block; text-align: center; }
+        .actions { margin-top: 25px; display: flex; flex-direction: column; gap: 10px; }
+        .action-btn { padding: 15px; font-size: 16px; font-weight: bold; border: none; border-radius: 8px; cursor: pointer; color: white; text-align: center; }
+        .btn-save { background-color: #007bff; }
+        .btn-whatsapp { background-color: #25D366; }
+        .btn-excel { background-color: #107c41; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>🍷 Satış Çetelesi</h2>
+    
+    <input type="text" id="marketAdi" placeholder="Ziyaret Edilen Market Adı...">
+
+    <div class="product" data-name="Bira (Efes 50cl)">
+        <div class="product-name">Bira (Efes 50cl)</div>
+        <div class="controls">
+            <button class="btn-minus" onclick="updateCount(this, -1)">-</button>
+            <span class="count">0</span>
+            <button class="btn-plus" onclick="updateCount(this, 1)">+</button>
+        </div>
+    </div>
+    <div class="product" data-name="Viski (Chivas 70cl)">
+        <div class="product-name">Viski (Chivas 70cl)</div>
+        <div class="controls">
+            <button class="btn-minus" onclick="updateCount(this, -1)">-</button>
+            <span class="count">0</span>
+            <button class="btn-plus" onclick="updateCount(this, 1)">+</button>
+        </div>
+    </div>
+    <div class="product" data-name="Votka (Absolut 70cl)">
+        <div class="product-name">Votka (Absolut 70cl)</div>
+        <div class="controls">
+            <button class="btn-minus" onclick="updateCount(this, -1)">-</button>
+            <span class="count">0</span>
+            <button class="btn-plus" onclick="updateCount(this, 1)">+</button>
+        </div>
+    </div>
+
+    <div class="actions">
+        <button class="action-btn btn-save" onclick="kaydetVeGonder()">☁️ Buluta (Excel'e) Kaydet</button>
+        <button class="action-btn btn-whatsapp" onclick="whatsappPaylas()">💬 Gün Sonu Raporu (WhatsApp)</button>
+        <button class="action-btn btn-excel" onclick="gunlukExcelIndir()">📊 Günlük Excel (CSV) İndir</button>
+    </div>
+</div>
+
+<script>
+    // KANKA DİKKAT: AZ ÖNCE KOPYALADIĞIN O UZUN LİNKİ AŞAĞIDAKİ TIRNAKLARIN İÇİNE YAPŞTIR!
+    const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxfQigQbYnvyUF5TkWJGKARK9_Xnrrf6XYUwZUc5nfEg0Atrk4x5mdITBjyqEpEapWURQ/exec";
+
+    function updateCount(btn, change) {
+        let countSpan = btn.parentElement.querySelector('.count');
+        let currentCount = parseInt(countSpan.innerText);
+        let newCount = currentCount + change;
+        if (newCount >= 0) countSpan.innerText = newCount;
+    }
+
+    function satislarıTopla() {
+        let market = document.getElementById("marketAdi").value || "Bilinmeyen Market";
+        let products = document.querySelectorAll('.product');
+        let satilanlar = [];
+        products.forEach(p => {
+            let ad = p.getAttribute('data-name');
+            let adet = parseInt(p.querySelector('.count').innerText);
+            if (adet > 0) satilanlar.push({ market: market, urun: ad, adet: adet });
+        });
+        return satilanlar;
+    }
+
+    function kaydetVeGonder() {
+        let satilanlar = satislarıTopla();
+        if (satilanlar.length === 0) { alert("Hiç ürün eklemedin!"); return; }
+
+        let btn = document.querySelector('.btn-save');
+        btn.innerText = "Kaydediliyor...";
+        
+        fetch(GOOGLE_SCRIPT_URL, {
+            method: "POST",
+            body: JSON.stringify(satilanlar)
+        }).then(response => {
+            alert("Başarıyla Google Sheets'e kaydedildi!");
+            btn.innerText = "☁️ Buluta (Excel'e) Kaydet";
+            // İşlem bitince sayaçları ve market adını sıfırla
+            document.querySelectorAll('.count').forEach(c => c.innerText = "0");
+            document.getElementById("marketAdi").value = "";
+        }).catch(error => {
+            alert("Hata oluştu! İnternetini kontrol et.");
+            btn.innerText = "☁️ Buluta (Excel'e) Kaydet";
+        });
+    }
+
+    function whatsappPaylas() {
+        let satilanlar = satislarıTopla();
+        if (satilanlar.length === 0) { alert("Paylaşılacak veri yok!"); return; }
+        let metin = `*GÜN SONU SATIŞ RAPORU*\n📅 ${new Date().toLocaleDateString("tr-TR")}\n🏢 Market: ${satilanlar[0].market}\n\n*Satılan Ürünler:*\n`;
+        satilanlar.forEach(s => metin += `- ${s.urun}: ${s.adet} adet\n`);
+        window.open(`https://wa.me/?text=${encodeURIComponent(metin)}`, '_blank');
+    }
+
+    function gunlukExcelIndir() {
+        let satilanlar = satislarıTopla();
+        if (satilanlar.length === 0) { alert("İndirilecek veri yok!"); return; }
+        let csvContent = "data:text/csv;charset=utf-8,\uFEFFTarih,Market,Ürün,Adet\n";
+        let tarih = new Date().toLocaleDateString("tr-TR");
+        satilanlar.forEach(s => csvContent += `${tarih},${s.market},${s.urun},${s.adet}\n`);
+        
+        let link = document.createElement("a");
+        link.href = encodeURI(csvContent);
+        link.download = `Gunluk_Satis_${tarih}.csv`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+</script>
+
+</body>
+</html>
