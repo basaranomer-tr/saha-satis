@@ -277,8 +277,12 @@
         let metin = `*GÜN SONU SATIŞ RAPORU*\n📅 ${new Date().toLocaleDateString("tr-TR")}\n🏢 Market: ${aktifMarket}\n\n*📌 Ürünler:*\n`;
         satilanlar.forEach(s => { metin += `▪️ ${s.urun}: ${s.adet} adet\n`; });
 
-        let whatsappUrl = `https://wa.me/?text=${encodeURIComponent(metin)}`;
-        window.open(whatsappUrl, '_blank');
+        // Sadece metni oluşturup WhatsApp'a fırlatıyoruz. 
+        // WhatsApp açılacak ve "Kime göndermek istersin?" diye soracak.
+        let whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(metin)}`;
+        
+        // Mobilde tarayıcının engellememesi ve metni düşürmemesi için direkt yönlendirme yapıyoruz:
+        window.location.href = whatsappUrl;
     }
 
     function gunlukExcelIndir() {
