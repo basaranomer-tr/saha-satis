@@ -6,7 +6,7 @@
     <title>Saha Satış Asistanı</title>
     <style>
         :root { --primary: #1e293b; --bg: #f8fafc; --card: #ffffff; --text: #334155; --border: #e2e8f0; }
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: var(--bg); color: var(--text); margin: 0; padding-bottom: 100px; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: var(--bg); color: var(--text); margin: 0; padding-bottom: 120px; }
         
         /* Üst Başlık ve Market Girişi */
         .header { background: var(--primary); color: white; padding: 20px 15px; text-align: center; font-size: 22px; font-weight: bold; border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
@@ -14,7 +14,7 @@
         .market-section input { width: 100%; padding: 15px; font-size: 16px; border: 1px solid var(--border); border-radius: 12px; box-sizing: border-box; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); text-align: center; font-weight: bold; color: var(--primary); }
         .market-section input:focus { outline: none; border-color: #3b82f6; }
 
-        /* Kategoriler (Açılır Kapanır Sekmeler) */
+        /* Kategoriler */
         .container { padding: 0 15px; }
         details { background: var(--card); margin-bottom: 15px; border-radius: 12px; overflow: hidden; border: 1px solid var(--border); box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
         summary { padding: 18px 15px; font-weight: bold; font-size: 18px; cursor: pointer; background: #f1f5f9; display: flex; align-items: center; justify-content: space-between; list-style: none; user-select: none; }
@@ -25,8 +25,7 @@
         /* Ürün Listesi */
         .product-list { padding: 5px 15px; background: var(--card); }
         .product { display: flex; justify-content: space-between; align-items: center; padding: 15px 0; border-bottom: 1px solid var(--border); }
-        .product:last-child { border-bottom: none; }
-        .product-name { font-size: 16px; font-weight: 600; color: var(--text); }
+        .product-name { font-size: 16px; font-weight: 600; color: var(--text); flex: 1; }
         
         /* Artı Eksi Butonları */
         .controls { display: flex; align-items: center; gap: 12px; background: #f8fafc; padding: 5px; border-radius: 10px; border: 1px solid var(--border); }
@@ -37,7 +36,13 @@
         .btn-plus:active { background-color: #16a34a; }
         .count { font-size: 18px; font-weight: bold; width: 30px; text-align: center; }
 
-        /* Alt Sabit Menü (Gün Sonu İşlemleri) */
+        /* Yeni Ürün Ekleme Alanı */
+        .add-new-product { display: flex; gap: 10px; padding: 15px 0; border-top: 1px dashed #cbd5e1; margin-top: 5px; }
+        .new-product-input { flex: 1; padding: 10px; font-size: 14px; border: 1px solid #cbd5e1; border-radius: 8px; outline: none; }
+        .new-product-input:focus { border-color: #8b5cf6; }
+        .btn-add-new { background-color: #8b5cf6; color: white; border: none; border-radius: 8px; padding: 0 15px; font-weight: bold; cursor: pointer; }
+
+        /* Alt Sabit Menü */
         .bottom-bar { position: fixed; bottom: 0; left: 0; right: 0; background: white; padding: 15px; display: flex; flex-direction: column; gap: 10px; border-top: 1px solid var(--border); box-shadow: 0 -4px 10px rgba(0,0,0,0.05); z-index: 1000; }
         .row-actions { display: flex; gap: 10px; }
         .action-btn { flex: 1; padding: 12px; font-size: 14px; font-weight: bold; border: none; border-radius: 10px; cursor: pointer; color: white; display: flex; align-items: center; justify-content: center; gap: 5px; }
@@ -69,21 +74,10 @@
                     <button class="btn-plus" onclick="updateCount(this, 1)">+</button>
                 </div>
             </div>
-            <div class="product" data-name="Chivas Regal 12Y 70cl">
-                <div class="product-name">Chivas Regal 12Y 70cl</div>
-                <div class="controls">
-                    <button class="btn-minus" onclick="updateCount(this, -1)">-</button>
-                    <span class="count">0</span>
-                    <button class="btn-plus" onclick="updateCount(this, 1)">+</button>
-                </div>
-            </div>
-            <div class="product" data-name="Johnnie Walker Red 70cl">
-                <div class="product-name">Johnnie Walker Red 70cl</div>
-                <div class="controls">
-                    <button class="btn-minus" onclick="updateCount(this, -1)">-</button>
-                    <span class="count">0</span>
-                    <button class="btn-plus" onclick="updateCount(this, 1)">+</button>
-                </div>
+            
+            <div class="add-new-product">
+                <input type="text" class="new-product-input" placeholder="Yeni viski ekle...">
+                <button class="btn-add-new" onclick="yeniUrunEkle(this)">+ Ekle</button>
             </div>
         </div>
     </details>
@@ -99,13 +93,10 @@
                     <button class="btn-plus" onclick="updateCount(this, 1)">+</button>
                 </div>
             </div>
-            <div class="product" data-name="Smirnoff 70cl">
-                <div class="product-name">Smirnoff 70cl</div>
-                <div class="controls">
-                    <button class="btn-minus" onclick="updateCount(this, -1)">-</button>
-                    <span class="count">0</span>
-                    <button class="btn-plus" onclick="updateCount(this, 1)">+</button>
-                </div>
+            
+            <div class="add-new-product">
+                <input type="text" class="new-product-input" placeholder="Yeni votka ekle...">
+                <button class="btn-add-new" onclick="yeniUrunEkle(this)">+ Ekle</button>
             </div>
         </div>
     </details>
@@ -121,13 +112,10 @@
                     <button class="btn-plus" onclick="updateCount(this, 1)">+</button>
                 </div>
             </div>
-            <div class="product" data-name="Tuborg Gold 50cl Kutu">
-                <div class="product-name">Tuborg Gold 50cl Kutu</div>
-                <div class="controls">
-                    <button class="btn-minus" onclick="updateCount(this, -1)">-</button>
-                    <span class="count">0</span>
-                    <button class="btn-plus" onclick="updateCount(this, 1)">+</button>
-                </div>
+
+            <div class="add-new-product">
+                <input type="text" class="new-product-input" placeholder="Yeni bira ekle...">
+                <button class="btn-add-new" onclick="yeniUrunEkle(this)">+ Ekle</button>
             </div>
         </div>
     </details>
@@ -143,13 +131,10 @@
                     <button class="btn-plus" onclick="updateCount(this, 1)">+</button>
                 </div>
             </div>
-            <div class="product" data-name="Kavaklıdere Çankaya 75cl">
-                <div class="product-name">Kavaklıdere Çankaya 75cl</div>
-                <div class="controls">
-                    <button class="btn-minus" onclick="updateCount(this, -1)">-</button>
-                    <span class="count">0</span>
-                    <button class="btn-plus" onclick="updateCount(this, 1)">+</button>
-                </div>
+
+            <div class="add-new-product">
+                <input type="text" class="new-product-input" placeholder="Yeni şarap ekle...">
+                <button class="btn-add-new" onclick="yeniUrunEkle(this)">+ Ekle</button>
             </div>
         </div>
     </details>
@@ -166,7 +151,7 @@
 
 <script>
     // KANKA LİNKİ BURAYA YAPIŞTIRMAYI UNUTMA!
-    const GOOGLE_SCRIPT_URL = "BURAYA_GOOGLE_APPS_SCRIPT_LINKINI_YAPISTIR";
+    const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxfQigQbYnvyUF5TkWJGKARK9_Xnrrf6XYUwZUc5nfEg0Atrk4x5mdITBjyqEpEapWURQ/exec";
 
     function updateCount(btn, change) {
         let countSpan = btn.parentElement.querySelector('.count');
@@ -175,6 +160,39 @@
         if (newCount >= 0) {
             countSpan.innerText = newCount;
         }
+    }
+
+    // YENİ ÜRÜN EKLEME FONKSİYONU
+    function yeniUrunEkle(btn) {
+        let input = btn.previousElementSibling; // Butonun yanındaki inputu bul
+        let urunAdi = input.value.trim(); // Yazılan değeri al
+        
+        if (urunAdi === "") {
+            alert("Lütfen önce eklenecek ürünün adını yazın!");
+            return;
+        }
+
+        let productList = btn.closest('.product-list');
+        let addNewDiv = btn.closest('.add-new-product');
+
+        // Yeni ürün div'ini oluştur
+        let newProduct = document.createElement('div');
+        newProduct.className = 'product';
+        newProduct.setAttribute('data-name', urunAdi);
+        newProduct.innerHTML = `
+            <div class="product-name">${urunAdi}</div>
+            <div class="controls">
+                <button class="btn-minus" onclick="updateCount(this, -1)">-</button>
+                <span class="count">0</span>
+                <button class="btn-plus" onclick="updateCount(this, 1)">+</button>
+            </div>
+        `;
+
+        // Listeye, ekleme kutusunun hemen üstüne ekle
+        productList.insertBefore(newProduct, addNewDiv);
+        
+        // Inputu temizle
+        input.value = "";
     }
 
     function satislarıTopla() {
@@ -195,7 +213,7 @@
     function kaydetVeGonder() {
         let satilanlar = satislarıTopla();
         if (satilanlar.length === 0) {
-            alert("⚠️ Gönderilecek bir şey yok, önce ürün ekle!"); 
+            alert("⚠️ Gönderilecek bir şey yok, önce ürün satışı ekle!"); 
             return;
         }
 
@@ -209,14 +227,12 @@
             alert("✅ Başarıyla Kaydedildi! Yeni markete geçebilirsin.");
             btn.innerText = "☁️ Kaydet ve Sıfırla (Buluta Gönder)";
             
-            // Satış sonrası ekranı sıfırlama işlemi:
             document.querySelectorAll('.count').forEach(c => c.innerText = "0");
             document.getElementById("marketAdi").value = "";
-            // İsteğe bağlı: tüm sekmeleri kapatıp sadece ilki açık kalsın
             document.querySelectorAll('details').forEach(d => d.removeAttribute('open'));
             document.querySelector('details').setAttribute('open', '');
             
-            window.scrollTo(0, 0); // Sayfanın en üstüne çık
+            window.scrollTo(0, 0); 
         }).catch(error => {
             alert("❌ Hata oluştu! İnternet bağlantını kontrol et.");
             btn.innerText = "☁️ Kaydet ve Sıfırla (Buluta Gönder)";
@@ -240,12 +256,13 @@
         let satilanlar = satislarıTopla();
         if (satilanlar.length === 0) { alert("İndirilecek veri yok!"); return; }
 
+        // EXCEL SORUNU ÇÖZÜMÜ: Virgül (,) yerine Noktalı Virgül (;) kullandık!
         let csvContent = "data:text/csv;charset=utf-8,\uFEFF"; 
-        csvContent += "Tarih,Market,Ürün,Adet\n";
+        csvContent += "Tarih;Market;Ürün;Adet\n";
 
         satilanlar.forEach(s => {
             let tarih = new Date().toLocaleDateString("tr-TR");
-            csvContent += `${tarih},${s.market},${s.urun},${s.adet}\n`;
+            csvContent += `${tarih};${s.market};${s.urun};${s.adet}\n`;
         });
 
         let encodedUri = encodeURI(csvContent);
