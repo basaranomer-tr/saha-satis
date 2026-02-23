@@ -3,67 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#121212">
+    
     <title>Kaner Saha Satış</title>
     <style>
-        /* KOYU TEMA RENKLERİ */
         :root { 
-            --bg-main: #121212; 
-            --bg-card: #1e1e1e; 
-            --text-light: #e0e0e0; 
-            --text-muted: #9ca3af;
-            --border-color: #333333; 
-            --accent: #3b82f6; /* Mavi Buton */
-            --accent-green: #10b981; 
-            --accent-red: #ef4444;
+            --bg-main: #121212; --bg-card: #1e1e1e; --text-light: #e0e0e0; --text-muted: #9ca3af;
+            --border-color: #333333; --accent: #3b82f6; --accent-green: #10b981; --accent-red: #ef4444;
         }
         
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: var(--bg-main); color: var(--text-light); margin: 0; padding: 0; padding-bottom: 120px; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: var(--bg-main); color: var(--text-light); margin: 0; padding: 0; padding-bottom: 120px; user-select: none; }
         
-        /* Ekran Geçişleri İçin */
         .screen { display: none; padding: 20px; animation: fadeIn 0.4s ease-in-out; }
         .screen.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* --- 1. EKRAN (GİRİŞ) TASARIMI --- */
+        /* 1. EKRAN */
         #login-screen { text-align: center; margin-top: 15vh; }
         .logo { max-width: 200px; margin-bottom: 30px; border-radius: 10px; }
         .login-box { background: var(--bg-card); padding: 30px 20px; border-radius: 16px; border: 1px solid var(--border-color); box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
         .login-box h2 { margin-top: 0; color: #fff; font-size: 22px; margin-bottom: 20px; }
-        .login-input { width: 100%; padding: 15px; font-size: 18px; background: var(--bg-main); border: 1px solid #444; border-radius: 10px; color: white; box-sizing: border-box; text-align: center; margin-bottom: 20px; outline: none; transition: 0.3s; }
+        .login-input { width: 100%; padding: 15px; font-size: 18px; background: var(--bg-main); border: 1px solid #444; border-radius: 10px; color: white; box-sizing: border-box; text-align: center; margin-bottom: 20px; outline: none; }
         .login-input:focus { border-color: var(--accent); }
-        .btn-start { width: 100%; padding: 16px; font-size: 18px; font-weight: bold; background: var(--accent-green); color: white; border: none; border-radius: 10px; cursor: pointer; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3); }
-        .btn-start:active { transform: scale(0.98); }
+        .btn-start { width: 100%; padding: 16px; font-size: 18px; font-weight: bold; background: var(--accent-green); color: white; border: none; border-radius: 10px; cursor: pointer; }
 
-        /* --- 2. EKRAN (SATIŞ) TASARIMI --- */
-        .market-header { background: var(--bg-card); padding: 15px; border-radius: 12px; margin-bottom: 20px; text-align: center; font-size: 20px; font-weight: bold; color: #fff; border: 1px solid var(--border-color); box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+        /* 2. EKRAN */
+        .market-header { background: var(--bg-card); padding: 15px; border-radius: 12px; margin-bottom: 20px; text-align: center; font-size: 20px; font-weight: bold; color: #fff; border: 1px solid var(--border-color); }
         .market-header span { color: var(--accent-green); }
 
-        /* Kategoriler */
         details { background: var(--bg-card); margin-bottom: 15px; border-radius: 12px; overflow: hidden; border: 1px solid var(--border-color); }
-        summary { padding: 18px 15px; font-weight: bold; font-size: 18px; cursor: pointer; background: #252525; display: flex; align-items: center; justify-content: space-between; list-style: none; user-select: none; color: #fff; }
+        summary { padding: 18px 15px; font-weight: bold; font-size: 18px; cursor: pointer; background: #252525; display: flex; align-items: center; justify-content: space-between; color: #fff; }
         summary::-webkit-details-marker { display: none; }
         summary:after { content: "▼"; font-size: 12px; color: var(--text-muted); }
         details[open] summary:after { content: "▲"; }
         
-        /* Ürün Listesi */
         .product-list { padding: 5px 15px; background: var(--bg-card); }
         .product { display: flex; justify-content: space-between; align-items: center; padding: 15px 0; border-bottom: 1px solid var(--border-color); }
         .product-name { font-size: 16px; font-weight: 600; color: var(--text-light); flex: 1; }
         
-        /* Artı Eksi Butonları */
         .controls { display: flex; align-items: center; gap: 12px; background: var(--bg-main); padding: 5px; border-radius: 10px; border: 1px solid var(--border-color); }
-        .controls button { width: 35px; height: 35px; font-size: 22px; border: none; border-radius: 8px; cursor: pointer; color: white; display: flex; align-items: center; justify-content: center; line-height: 0; }
+        .controls button { width: 35px; height: 35px; font-size: 22px; border: none; border-radius: 8px; cursor: pointer; color: white; display: flex; align-items: center; justify-content: center; }
         .btn-minus { background-color: var(--accent-red); }
         .btn-plus { background-color: var(--accent-green); }
         .count { font-size: 18px; font-weight: bold; width: 30px; text-align: center; color: white; }
 
-        /* Yeni Ürün Ekleme */
         .add-new-product { display: flex; gap: 10px; padding: 15px 0; border-top: 1px dashed var(--border-color); margin-top: 5px; }
         .new-product-input { flex: 1; padding: 10px; font-size: 14px; background: var(--bg-main); border: 1px solid var(--border-color); border-radius: 8px; color: white; outline: none; }
-        .new-product-input:focus { border-color: #8b5cf6; }
         .btn-add-new { background-color: #8b5cf6; color: white; border: none; border-radius: 8px; padding: 0 15px; font-weight: bold; cursor: pointer; }
 
-        /* Alt Sabit Menü */
         .bottom-bar { position: fixed; bottom: 0; left: 0; right: 0; background: var(--bg-card); padding: 15px; display: flex; flex-direction: column; gap: 10px; border-top: 1px solid var(--border-color); z-index: 1000; }
         .row-actions { display: flex; gap: 10px; }
         .action-btn { flex: 1; padding: 12px; font-size: 14px; font-weight: bold; border: none; border-radius: 10px; cursor: pointer; color: white; display: flex; align-items: center; justify-content: center; gap: 5px; }
@@ -76,7 +65,6 @@
 
 <div id="login-screen" class="screen active">
     <img src="kaner.png" alt="Kaner Logo" class="logo" onerror="this.style.display='none';">
-    
     <div class="login-box">
         <h2>Saha Ziyareti Başlat</h2>
         <input type="text" id="marketInput" class="login-input" placeholder="Hangi markettesin?">
@@ -85,79 +73,64 @@
 </div>
 
 <div id="sales-screen" class="screen">
-    
-    <div class="market-header">
-        📍 <span id="displayMarketName">Market Adı</span>
-    </div>
+    <div class="market-header">📍 <span id="displayMarketName">Market Adı</span></div>
 
     <details open>
         <summary>🥃 Viskiler</summary>
-        <div class="product-list">
+        <div class="product-list" id="cat-viski">
             <div class="product" data-name="Jack Daniels 70cl">
                 <div class="product-name">Jack Daniels 70cl</div>
                 <div class="controls">
-                    <button class="btn-minus" onclick="updateCount(this, -1)">-</button>
-                    <span class="count">0</span>
-                    <button class="btn-plus" onclick="updateCount(this, 1)">+</button>
+                    <button class="btn-minus" onclick="updateCount(this, -1)">-</button><span class="count">0</span><button class="btn-plus" onclick="updateCount(this, 1)">+</button>
                 </div>
             </div>
             <div class="add-new-product">
-                <input type="text" class="new-product-input" placeholder="Yeni viski ekle...">
-                <button class="btn-add-new" onclick="yeniUrunEkle(this)">+ Ekle</button>
+                <input type="text" class="new-product-input" placeholder="Yeni viski ekle..."><button class="btn-add-new" onclick="yeniUrunEkle(this)">+ Ekle</button>
             </div>
         </div>
     </details>
 
     <details>
         <summary>🧊 Votkalar</summary>
-        <div class="product-list">
+        <div class="product-list" id="cat-votka">
             <div class="product" data-name="Absolut 70cl">
                 <div class="product-name">Absolut 70cl</div>
                 <div class="controls">
-                    <button class="btn-minus" onclick="updateCount(this, -1)">-</button>
-                    <span class="count">0</span>
-                    <button class="btn-plus" onclick="updateCount(this, 1)">+</button>
+                    <button class="btn-minus" onclick="updateCount(this, -1)">-</button><span class="count">0</span><button class="btn-plus" onclick="updateCount(this, 1)">+</button>
                 </div>
             </div>
             <div class="add-new-product">
-                <input type="text" class="new-product-input" placeholder="Yeni votka ekle...">
-                <button class="btn-add-new" onclick="yeniUrunEkle(this)">+ Ekle</button>
+                <input type="text" class="new-product-input" placeholder="Yeni votka ekle..."><button class="btn-add-new" onclick="yeniUrunEkle(this)">+ Ekle</button>
             </div>
         </div>
     </details>
 
     <details>
         <summary>🍺 Biralar</summary>
-        <div class="product-list">
+        <div class="product-list" id="cat-bira">
             <div class="product" data-name="Efes Pilsen 50cl Şişe">
                 <div class="product-name">Efes Pilsen 50cl Şişe</div>
                 <div class="controls">
-                    <button class="btn-minus" onclick="updateCount(this, -1)">-</button>
-                    <span class="count">0</span>
-                    <button class="btn-plus" onclick="updateCount(this, 1)">+</button>
+                    <button class="btn-minus" onclick="updateCount(this, -1)">-</button><span class="count">0</span><button class="btn-plus" onclick="updateCount(this, 1)">+</button>
                 </div>
             </div>
             <div class="add-new-product">
-                <input type="text" class="new-product-input" placeholder="Yeni bira ekle...">
-                <button class="btn-add-new" onclick="yeniUrunEkle(this)">+ Ekle</button>
+                <input type="text" class="new-product-input" placeholder="Yeni bira ekle..."><button class="btn-add-new" onclick="yeniUrunEkle(this)">+ Ekle</button>
             </div>
         </div>
     </details>
 
     <details>
         <summary>🍷 Şaraplar</summary>
-        <div class="product-list">
+        <div class="product-list" id="cat-sarap">
             <div class="product" data-name="Kavaklıdere Yakut 75cl">
                 <div class="product-name">Kavaklıdere Yakut 75cl</div>
                 <div class="controls">
-                    <button class="btn-minus" onclick="updateCount(this, -1)">-</button>
-                    <span class="count">0</span>
-                    <button class="btn-plus" onclick="updateCount(this, 1)">+</button>
+                    <button class="btn-minus" onclick="updateCount(this, -1)">-</button><span class="count">0</span><button class="btn-plus" onclick="updateCount(this, 1)">+</button>
                 </div>
             </div>
             <div class="add-new-product">
-                <input type="text" class="new-product-input" placeholder="Yeni şarap ekle...">
-                <button class="btn-add-new" onclick="yeniUrunEkle(this)">+ Ekle</button>
+                <input type="text" class="new-product-input" placeholder="Yeni şarap ekle..."><button class="btn-add-new" onclick="yeniUrunEkle(this)">+ Ekle</button>
             </div>
         </div>
     </details>
@@ -169,95 +142,127 @@
             <button class="action-btn btn-excel" onclick="gunlukExcelIndir()">📊 Excel</button>
         </div>
     </div>
-
 </div>
 
 <script>
-    // KANKA LİNKİ BURAYA YAPIŞTIRMAYI UNUTMA!
     const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxfQigQbYnvyUF5TkWJGKARK9_Xnrrf6XYUwZUc5nfEg0Atrk4x5mdITBjyqEpEapWURQ/exec";
     let aktifMarket = "";
 
-    // EKRAN GEÇİŞ FONKSİYONU
-    function ziyareteBasla() {
-        let marketInput = document.getElementById("marketInput").value.trim();
-        if(marketInput === "") {
-            alert("Lütfen bir market adı girin!");
-            return;
+    // --- OTOMATİK HAFIZA FONKSİYONLARI ---
+    function hafizayaYaz() {
+        let state = { market: aktifMarket, products: [] };
+        document.querySelectorAll('.product').forEach(p => {
+            let catId = p.closest('.product-list').id;
+            let name = p.getAttribute('data-name');
+            let count = parseInt(p.querySelector('.count').innerText);
+            let isCustom = p.classList.contains('custom-product');
+            state.products.push({ catId, name, count, isCustom });
+        });
+        localStorage.setItem('satisHafizasi', JSON.stringify(state));
+    }
+
+    function hafizadanYukle() {
+        let kayit = localStorage.getItem('satisHafizasi');
+        if (kayit) {
+            let state = JSON.parse(kayit);
+            if (state.market && state.market !== "") {
+                aktifMarket = state.market;
+                document.getElementById("marketInput").value = aktifMarket;
+                document.getElementById("displayMarketName").innerText = aktifMarket;
+                document.getElementById("login-screen").classList.remove("active");
+                document.getElementById("sales-screen").classList.add("active");
+            }
+            
+            state.products.forEach(p => {
+                if (p.isCustom) {
+                    let productList = document.getElementById(p.catId);
+                    let addNewDiv = productList.querySelector('.add-new-product');
+                    let newProduct = document.createElement('div');
+                    newProduct.className = 'product custom-product';
+                    newProduct.setAttribute('data-name', p.name);
+                    newProduct.innerHTML = `
+                        <div class="product-name">${p.name}</div>
+                        <div class="controls">
+                            <button class="btn-minus" onclick="updateCount(this, -1)">-</button>
+                            <span class="count">${p.count}</span>
+                            <button class="btn-plus" onclick="updateCount(this, 1)">+</button>
+                        </div>
+                    `;
+                    productList.insertBefore(newProduct, addNewDiv);
+                } else {
+                    let existingElement = document.querySelector(`.product[data-name="${p.name}"]`);
+                    if(existingElement) existingElement.querySelector('.count').innerText = p.count;
+                }
+            });
         }
-        
-        aktifMarket = marketInput;
+    }
+
+    // Sayfa Yüklenince Hafızayı Çek
+    window.onload = hafizadanYukle;
+
+    // --- TEMEL FONKSİYONLAR ---
+    function ziyareteBasla() {
+        let val = document.getElementById("marketInput").value.trim();
+        if(!val) { alert("Lütfen market adı girin!"); return; }
+        aktifMarket = val;
         document.getElementById("displayMarketName").innerText = aktifMarket;
-        
-        // Ekranları değiştir
         document.getElementById("login-screen").classList.remove("active");
         document.getElementById("sales-screen").classList.add("active");
+        hafizayaYaz();
         window.scrollTo(0, 0);
     }
 
     function updateCount(btn, change) {
         let countSpan = btn.parentElement.querySelector('.count');
-        let currentCount = parseInt(countSpan.innerText);
-        let newCount = currentCount + change;
-        if (newCount >= 0) countSpan.innerText = newCount;
+        let val = parseInt(countSpan.innerText) + change;
+        if (val >= 0) {
+            countSpan.innerText = val;
+            hafizayaYaz(); // Her tıklamada hafızayı güncelle
+        }
     }
 
     function yeniUrunEkle(btn) {
         let input = btn.previousElementSibling; 
         let urunAdi = input.value.trim(); 
-        if (urunAdi === "") { alert("Lütfen ürün adı yazın!"); return; }
+        if (!urunAdi) { alert("Ürün adı yazın!"); return; }
 
         let productList = btn.closest('.product-list');
         let addNewDiv = btn.closest('.add-new-product');
-
         let newProduct = document.createElement('div');
-        newProduct.className = 'product';
+        newProduct.className = 'product custom-product';
         newProduct.setAttribute('data-name', urunAdi);
-        newProduct.innerHTML = `
-            <div class="product-name">${urunAdi}</div>
-            <div class="controls">
-                <button class="btn-minus" onclick="updateCount(this, -1)">-</button>
-                <span class="count">0</span>
-                <button class="btn-plus" onclick="updateCount(this, 1)">+</button>
-            </div>
-        `;
+        newProduct.innerHTML = `<div class="product-name">${urunAdi}</div><div class="controls"><button class="btn-minus" onclick="updateCount(this, -1)">-</button><span class="count">0</span><button class="btn-plus" onclick="updateCount(this, 1)">+</button></div>`;
 
         productList.insertBefore(newProduct, addNewDiv);
         input.value = "";
+        hafizayaYaz(); // Yeni eklenen ürünü de hafızaya kaydet
     }
 
     function satislarıTopla() {
-        let products = document.querySelectorAll('.product');
         let satilanlar = [];
-
-        products.forEach(p => {
-            let ad = p.getAttribute('data-name');
+        document.querySelectorAll('.product').forEach(p => {
             let adet = parseInt(p.querySelector('.count').innerText);
-            if (adet > 0) {
-                satilanlar.push({ market: aktifMarket, urun: ad, adet: adet });
-            }
+            if (adet > 0) satilanlar.push({ market: aktifMarket, urun: p.getAttribute('data-name'), adet: adet });
         });
         return satilanlar;
     }
 
     function kaydetVeGonder() {
         let satilanlar = satislarıTopla();
-        if (satilanlar.length === 0) {
-            alert("⚠️ Gönderilecek bir şey yok, ürün satışı girmedin!"); 
-            return;
-        }
+        if (satilanlar.length === 0) { alert("⚠️ Gönderilecek satış yok!"); return; }
 
         let btn = document.querySelector('.btn-save');
         btn.innerText = "⏳ Kaydediliyor...";
         
-        fetch(GOOGLE_SCRIPT_URL, {
-            method: "POST",
-            body: JSON.stringify(satilanlar)
-        }).then(response => {
-            alert("✅ Ziyaret Kaydedildi! Yeni markete geçebilirsin.");
+        fetch(GOOGLE_SCRIPT_URL, { method: "POST", body: JSON.stringify(satilanlar) })
+        .then(response => {
+            alert("✅ Ziyaret Kaydedildi!");
             btn.innerText = "☁️ Ziyareti Bitir (Buluta Gönder)";
             
-            // Verileri Sıfırla ve Ana Ekrana Dön
+            // Başarılı olunca sistemi sıfırla ve HAFIZAYI TEMİZLE
+            localStorage.removeItem('satisHafizasi');
             document.querySelectorAll('.count').forEach(c => c.innerText = "0");
+            document.querySelectorAll('.custom-product').forEach(c => c.remove()); // Eklenen özel ürünleri sil
             document.getElementById("marketInput").value = "";
             aktifMarket = "";
             
@@ -265,43 +270,37 @@
             document.getElementById("login-screen").classList.add("active");
             window.scrollTo(0, 0); 
         }).catch(error => {
-            alert("❌ Hata oluştu! İnternet bağlantını kontrol et.");
+            alert("❌ Hata oluştu! İnternetini kontrol et.");
             btn.innerText = "☁️ Ziyareti Bitir (Buluta Gönder)";
         });
     }
 
+    // Sayfa Yanlışlıkla Kapanırsa Uyarı Ver
+    window.addEventListener('beforeunload', function (e) {
+        let satilanlar = satislarıTopla();
+        if (satilanlar.length > 0) {
+            e.preventDefault();
+            e.returnValue = '';
+        }
+    });
+
     function whatsappPaylas() {
         let satilanlar = satislarıTopla();
-        if (satilanlar.length === 0) { alert("Paylaşılacak veri yok!"); return; }
-
+        if (satilanlar.length === 0) { alert("Veri yok!"); return; }
         let metin = `*GÜN SONU SATIŞ RAPORU*\n📅 ${new Date().toLocaleDateString("tr-TR")}\n🏢 Market: ${aktifMarket}\n\n*📌 Ürünler:*\n`;
         satilanlar.forEach(s => { metin += `▪️ ${s.urun}: ${s.adet} adet\n`; });
-
-        // Sadece metni oluşturup WhatsApp'a fırlatıyoruz. 
-        // WhatsApp açılacak ve "Kime göndermek istersin?" diye soracak.
-        let whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(metin)}`;
-        
-        // Mobilde tarayıcının engellememesi ve metni düşürmemesi için direkt yönlendirme yapıyoruz:
-        window.location.href = whatsappUrl;
+        window.location.href = `https://api.whatsapp.com/send?text=${encodeURIComponent(metin)}`;
     }
 
     function gunlukExcelIndir() {
         let satilanlar = satislarıTopla();
-        if (satilanlar.length === 0) { alert("İndirilecek veri yok!"); return; }
-
+        if (satilanlar.length === 0) { alert("Veri yok!"); return; }
         let csvContent = "data:text/csv;charset=utf-8,\uFEFFTarih;Market;Ürün;Adet\n";
-        satilanlar.forEach(s => {
-            let tarih = new Date().toLocaleDateString("tr-TR");
-            csvContent += `${tarih};${s.market};${s.urun};${s.adet}\n`;
-        });
-
-        let encodedUri = encodeURI(csvContent);
+        satilanlar.forEach(s => { csvContent += `${new Date().toLocaleDateString("tr-TR")};${s.market};${s.urun};${s.adet}\n`; });
         let link = document.createElement("a");
-        link.setAttribute("href", encodedUri);
+        link.setAttribute("href", encodeURI(csvContent));
         link.setAttribute("download", `Satis_${aktifMarket}_${new Date().toLocaleDateString("tr-TR")}.csv`);
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
+        document.body.appendChild(link); link.click(); document.body.removeChild(link);
     }
 </script>
 
