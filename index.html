@@ -3,66 +3,93 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Saha Satış Asistanı</title>
+    <title>Kaner Saha Satış</title>
     <style>
-        :root { --primary: #1e293b; --bg: #f8fafc; --card: #ffffff; --text: #334155; --border: #e2e8f0; }
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: var(--bg); color: var(--text); margin: 0; padding-bottom: 120px; }
+        /* KOYU TEMA RENKLERİ */
+        :root { 
+            --bg-main: #121212; 
+            --bg-card: #1e1e1e; 
+            --text-light: #e0e0e0; 
+            --text-muted: #9ca3af;
+            --border-color: #333333; 
+            --accent: #3b82f6; /* Mavi Buton */
+            --accent-green: #10b981; 
+            --accent-red: #ef4444;
+        }
         
-        /* Üst Başlık ve Market Girişi */
-        .header { background: var(--primary); color: white; padding: 20px 15px; text-align: center; font-size: 22px; font-weight: bold; border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
-        .market-section { margin: -20px 15px 20px 15px; position: relative; }
-        .market-section input { width: 100%; padding: 15px; font-size: 16px; border: 1px solid var(--border); border-radius: 12px; box-sizing: border-box; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); text-align: center; font-weight: bold; color: var(--primary); }
-        .market-section input:focus { outline: none; border-color: #3b82f6; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: var(--bg-main); color: var(--text-light); margin: 0; padding: 0; padding-bottom: 120px; }
+        
+        /* Ekran Geçişleri İçin */
+        .screen { display: none; padding: 20px; animation: fadeIn 0.4s ease-in-out; }
+        .screen.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* --- 1. EKRAN (GİRİŞ) TASARIMI --- */
+        #login-screen { text-align: center; margin-top: 15vh; }
+        .logo { max-width: 200px; margin-bottom: 30px; border-radius: 10px; }
+        .login-box { background: var(--bg-card); padding: 30px 20px; border-radius: 16px; border: 1px solid var(--border-color); box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
+        .login-box h2 { margin-top: 0; color: #fff; font-size: 22px; margin-bottom: 20px; }
+        .login-input { width: 100%; padding: 15px; font-size: 18px; background: var(--bg-main); border: 1px solid #444; border-radius: 10px; color: white; box-sizing: border-box; text-align: center; margin-bottom: 20px; outline: none; transition: 0.3s; }
+        .login-input:focus { border-color: var(--accent); }
+        .btn-start { width: 100%; padding: 16px; font-size: 18px; font-weight: bold; background: var(--accent-green); color: white; border: none; border-radius: 10px; cursor: pointer; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3); }
+        .btn-start:active { transform: scale(0.98); }
+
+        /* --- 2. EKRAN (SATIŞ) TASARIMI --- */
+        .market-header { background: var(--bg-card); padding: 15px; border-radius: 12px; margin-bottom: 20px; text-align: center; font-size: 20px; font-weight: bold; color: #fff; border: 1px solid var(--border-color); box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+        .market-header span { color: var(--accent-green); }
 
         /* Kategoriler */
-        .container { padding: 0 15px; }
-        details { background: var(--card); margin-bottom: 15px; border-radius: 12px; overflow: hidden; border: 1px solid var(--border); box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
-        summary { padding: 18px 15px; font-weight: bold; font-size: 18px; cursor: pointer; background: #f1f5f9; display: flex; align-items: center; justify-content: space-between; list-style: none; user-select: none; }
+        details { background: var(--bg-card); margin-bottom: 15px; border-radius: 12px; overflow: hidden; border: 1px solid var(--border-color); }
+        summary { padding: 18px 15px; font-weight: bold; font-size: 18px; cursor: pointer; background: #252525; display: flex; align-items: center; justify-content: space-between; list-style: none; user-select: none; color: #fff; }
         summary::-webkit-details-marker { display: none; }
-        summary:after { content: "▼"; font-size: 12px; color: #64748b; transition: 0.3s; }
+        summary:after { content: "▼"; font-size: 12px; color: var(--text-muted); }
         details[open] summary:after { content: "▲"; }
         
         /* Ürün Listesi */
-        .product-list { padding: 5px 15px; background: var(--card); }
-        .product { display: flex; justify-content: space-between; align-items: center; padding: 15px 0; border-bottom: 1px solid var(--border); }
-        .product-name { font-size: 16px; font-weight: 600; color: var(--text); flex: 1; }
+        .product-list { padding: 5px 15px; background: var(--bg-card); }
+        .product { display: flex; justify-content: space-between; align-items: center; padding: 15px 0; border-bottom: 1px solid var(--border-color); }
+        .product-name { font-size: 16px; font-weight: 600; color: var(--text-light); flex: 1; }
         
         /* Artı Eksi Butonları */
-        .controls { display: flex; align-items: center; gap: 12px; background: #f8fafc; padding: 5px; border-radius: 10px; border: 1px solid var(--border); }
+        .controls { display: flex; align-items: center; gap: 12px; background: var(--bg-main); padding: 5px; border-radius: 10px; border: 1px solid var(--border-color); }
         .controls button { width: 35px; height: 35px; font-size: 22px; border: none; border-radius: 8px; cursor: pointer; color: white; display: flex; align-items: center; justify-content: center; line-height: 0; }
-        .btn-minus { background-color: #ef4444; }
-        .btn-minus:active { background-color: #dc2626; }
-        .btn-plus { background-color: #22c55e; }
-        .btn-plus:active { background-color: #16a34a; }
-        .count { font-size: 18px; font-weight: bold; width: 30px; text-align: center; }
+        .btn-minus { background-color: var(--accent-red); }
+        .btn-plus { background-color: var(--accent-green); }
+        .count { font-size: 18px; font-weight: bold; width: 30px; text-align: center; color: white; }
 
-        /* Yeni Ürün Ekleme Alanı */
-        .add-new-product { display: flex; gap: 10px; padding: 15px 0; border-top: 1px dashed #cbd5e1; margin-top: 5px; }
-        .new-product-input { flex: 1; padding: 10px; font-size: 14px; border: 1px solid #cbd5e1; border-radius: 8px; outline: none; }
+        /* Yeni Ürün Ekleme */
+        .add-new-product { display: flex; gap: 10px; padding: 15px 0; border-top: 1px dashed var(--border-color); margin-top: 5px; }
+        .new-product-input { flex: 1; padding: 10px; font-size: 14px; background: var(--bg-main); border: 1px solid var(--border-color); border-radius: 8px; color: white; outline: none; }
         .new-product-input:focus { border-color: #8b5cf6; }
         .btn-add-new { background-color: #8b5cf6; color: white; border: none; border-radius: 8px; padding: 0 15px; font-weight: bold; cursor: pointer; }
 
         /* Alt Sabit Menü */
-        .bottom-bar { position: fixed; bottom: 0; left: 0; right: 0; background: white; padding: 15px; display: flex; flex-direction: column; gap: 10px; border-top: 1px solid var(--border); box-shadow: 0 -4px 10px rgba(0,0,0,0.05); z-index: 1000; }
+        .bottom-bar { position: fixed; bottom: 0; left: 0; right: 0; background: var(--bg-card); padding: 15px; display: flex; flex-direction: column; gap: 10px; border-top: 1px solid var(--border-color); z-index: 1000; }
         .row-actions { display: flex; gap: 10px; }
         .action-btn { flex: 1; padding: 12px; font-size: 14px; font-weight: bold; border: none; border-radius: 10px; cursor: pointer; color: white; display: flex; align-items: center; justify-content: center; gap: 5px; }
-        .btn-save { background-color: #3b82f6; width: 100%; font-size: 16px; padding: 15px; }
-        .btn-wp { background-color: #25D366; }
+        .btn-save { background-color: var(--accent); width: 100%; font-size: 16px; padding: 15px; }
+        .btn-wp { background-color: #25D366; color: #000; }
         .btn-excel { background-color: #107c41; }
     </style>
 </head>
 <body>
 
-<div class="header">
-    🍷 Saha Satış Asistanı
-</div>
-
-<div class="market-section">
-    <input type="text" id="marketAdi" placeholder="Şu an hangi markettesin?">
-</div>
-
-<div class="container">
+<div id="login-screen" class="screen active">
+    <img src="kaner.png" alt="Kaner Logo" class="logo" onerror="this.style.display='none';">
     
+    <div class="login-box">
+        <h2>Saha Ziyareti Başlat</h2>
+        <input type="text" id="marketInput" class="login-input" placeholder="Hangi markettesin?">
+        <button class="btn-start" onclick="ziyareteBasla()">🚀 Ziyarete Başla</button>
+    </div>
+</div>
+
+<div id="sales-screen" class="screen">
+    
+    <div class="market-header">
+        📍 <span id="displayMarketName">Market Adı</span>
+    </div>
+
     <details open>
         <summary>🥃 Viskiler</summary>
         <div class="product-list">
@@ -74,7 +101,6 @@
                     <button class="btn-plus" onclick="updateCount(this, 1)">+</button>
                 </div>
             </div>
-            
             <div class="add-new-product">
                 <input type="text" class="new-product-input" placeholder="Yeni viski ekle...">
                 <button class="btn-add-new" onclick="yeniUrunEkle(this)">+ Ekle</button>
@@ -93,7 +119,6 @@
                     <button class="btn-plus" onclick="updateCount(this, 1)">+</button>
                 </div>
             </div>
-            
             <div class="add-new-product">
                 <input type="text" class="new-product-input" placeholder="Yeni votka ekle...">
                 <button class="btn-add-new" onclick="yeniUrunEkle(this)">+ Ekle</button>
@@ -112,7 +137,6 @@
                     <button class="btn-plus" onclick="updateCount(this, 1)">+</button>
                 </div>
             </div>
-
             <div class="add-new-product">
                 <input type="text" class="new-product-input" placeholder="Yeni bira ekle...">
                 <button class="btn-add-new" onclick="yeniUrunEkle(this)">+ Ekle</button>
@@ -131,7 +155,6 @@
                     <button class="btn-plus" onclick="updateCount(this, 1)">+</button>
                 </div>
             </div>
-
             <div class="add-new-product">
                 <input type="text" class="new-product-input" placeholder="Yeni şarap ekle...">
                 <button class="btn-add-new" onclick="yeniUrunEkle(this)">+ Ekle</button>
@@ -139,43 +162,53 @@
         </div>
     </details>
 
-</div>
-
-<div class="bottom-bar">
-    <button class="action-btn btn-save" onclick="kaydetVeGonder()">☁️ Kaydet ve Sıfırla (Buluta Gönder)</button>
-    <div class="row-actions">
-        <button class="action-btn btn-wp" onclick="whatsappPaylas()">💬 WhatsApp Raporu</button>
-        <button class="action-btn btn-excel" onclick="gunlukExcelIndir()">📊 Excel İndir</button>
+    <div class="bottom-bar">
+        <button class="action-btn btn-save" onclick="kaydetVeGonder()">☁️ Ziyareti Bitir (Buluta Gönder)</button>
+        <div class="row-actions">
+            <button class="action-btn btn-wp" onclick="whatsappPaylas()">💬 WhatsApp</button>
+            <button class="action-btn btn-excel" onclick="gunlukExcelIndir()">📊 Excel</button>
+        </div>
     </div>
+
 </div>
 
 <script>
     // KANKA LİNKİ BURAYA YAPIŞTIRMAYI UNUTMA!
     const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxfQigQbYnvyUF5TkWJGKARK9_Xnrrf6XYUwZUc5nfEg0Atrk4x5mdITBjyqEpEapWURQ/exec";
+    let aktifMarket = "";
+
+    // EKRAN GEÇİŞ FONKSİYONU
+    function ziyareteBasla() {
+        let marketInput = document.getElementById("marketInput").value.trim();
+        if(marketInput === "") {
+            alert("Lütfen bir market adı girin!");
+            return;
+        }
+        
+        aktifMarket = marketInput;
+        document.getElementById("displayMarketName").innerText = aktifMarket;
+        
+        // Ekranları değiştir
+        document.getElementById("login-screen").classList.remove("active");
+        document.getElementById("sales-screen").classList.add("active");
+        window.scrollTo(0, 0);
+    }
 
     function updateCount(btn, change) {
         let countSpan = btn.parentElement.querySelector('.count');
         let currentCount = parseInt(countSpan.innerText);
         let newCount = currentCount + change;
-        if (newCount >= 0) {
-            countSpan.innerText = newCount;
-        }
+        if (newCount >= 0) countSpan.innerText = newCount;
     }
 
-    // YENİ ÜRÜN EKLEME FONKSİYONU
     function yeniUrunEkle(btn) {
-        let input = btn.previousElementSibling; // Butonun yanındaki inputu bul
-        let urunAdi = input.value.trim(); // Yazılan değeri al
-        
-        if (urunAdi === "") {
-            alert("Lütfen önce eklenecek ürünün adını yazın!");
-            return;
-        }
+        let input = btn.previousElementSibling; 
+        let urunAdi = input.value.trim(); 
+        if (urunAdi === "") { alert("Lütfen ürün adı yazın!"); return; }
 
         let productList = btn.closest('.product-list');
         let addNewDiv = btn.closest('.add-new-product');
 
-        // Yeni ürün div'ini oluştur
         let newProduct = document.createElement('div');
         newProduct.className = 'product';
         newProduct.setAttribute('data-name', urunAdi);
@@ -188,15 +221,11 @@
             </div>
         `;
 
-        // Listeye, ekleme kutusunun hemen üstüne ekle
         productList.insertBefore(newProduct, addNewDiv);
-        
-        // Inputu temizle
         input.value = "";
     }
 
     function satislarıTopla() {
-        let market = document.getElementById("marketAdi").value || "Market Girilmedi";
         let products = document.querySelectorAll('.product');
         let satilanlar = [];
 
@@ -204,7 +233,7 @@
             let ad = p.getAttribute('data-name');
             let adet = parseInt(p.querySelector('.count').innerText);
             if (adet > 0) {
-                satilanlar.push({ market: market, urun: ad, adet: adet });
+                satilanlar.push({ market: aktifMarket, urun: ad, adet: adet });
             }
         });
         return satilanlar;
@@ -213,7 +242,7 @@
     function kaydetVeGonder() {
         let satilanlar = satislarıTopla();
         if (satilanlar.length === 0) {
-            alert("⚠️ Gönderilecek bir şey yok, önce ürün satışı ekle!"); 
+            alert("⚠️ Gönderilecek bir şey yok, ürün satışı girmedin!"); 
             return;
         }
 
@@ -224,18 +253,20 @@
             method: "POST",
             body: JSON.stringify(satilanlar)
         }).then(response => {
-            alert("✅ Başarıyla Kaydedildi! Yeni markete geçebilirsin.");
-            btn.innerText = "☁️ Kaydet ve Sıfırla (Buluta Gönder)";
+            alert("✅ Ziyaret Kaydedildi! Yeni markete geçebilirsin.");
+            btn.innerText = "☁️ Ziyareti Bitir (Buluta Gönder)";
             
+            // Verileri Sıfırla ve Ana Ekrana Dön
             document.querySelectorAll('.count').forEach(c => c.innerText = "0");
-            document.getElementById("marketAdi").value = "";
-            document.querySelectorAll('details').forEach(d => d.removeAttribute('open'));
-            document.querySelector('details').setAttribute('open', '');
+            document.getElementById("marketInput").value = "";
+            aktifMarket = "";
             
+            document.getElementById("sales-screen").classList.remove("active");
+            document.getElementById("login-screen").classList.add("active");
             window.scrollTo(0, 0); 
         }).catch(error => {
             alert("❌ Hata oluştu! İnternet bağlantını kontrol et.");
-            btn.innerText = "☁️ Kaydet ve Sıfırla (Buluta Gönder)";
+            btn.innerText = "☁️ Ziyareti Bitir (Buluta Gönder)";
         });
     }
 
@@ -243,10 +274,8 @@
         let satilanlar = satislarıTopla();
         if (satilanlar.length === 0) { alert("Paylaşılacak veri yok!"); return; }
 
-        let metin = `*GÜN SONU SATIŞ RAPORU*\n📅 ${new Date().toLocaleDateString("tr-TR")}\n🏢 Gidilen Market: ${satilanlar[0].market}\n\n*📌 Satılan Ürünler:*\n`;
-        satilanlar.forEach(s => {
-            metin += `▪️ ${s.urun}: ${s.adet} adet\n`;
-        });
+        let metin = `*GÜN SONU SATIŞ RAPORU*\n📅 ${new Date().toLocaleDateString("tr-TR")}\n🏢 Market: ${aktifMarket}\n\n*📌 Ürünler:*\n`;
+        satilanlar.forEach(s => { metin += `▪️ ${s.urun}: ${s.adet} adet\n`; });
 
         let whatsappUrl = `https://wa.me/?text=${encodeURIComponent(metin)}`;
         window.open(whatsappUrl, '_blank');
@@ -256,10 +285,7 @@
         let satilanlar = satislarıTopla();
         if (satilanlar.length === 0) { alert("İndirilecek veri yok!"); return; }
 
-        // EXCEL SORUNU ÇÖZÜMÜ: Virgül (,) yerine Noktalı Virgül (;) kullandık!
-        let csvContent = "data:text/csv;charset=utf-8,\uFEFF"; 
-        csvContent += "Tarih;Market;Ürün;Adet\n";
-
+        let csvContent = "data:text/csv;charset=utf-8,\uFEFFTarih;Market;Ürün;Adet\n";
         satilanlar.forEach(s => {
             let tarih = new Date().toLocaleDateString("tr-TR");
             csvContent += `${tarih};${s.market};${s.urun};${s.adet}\n`;
@@ -268,7 +294,7 @@
         let encodedUri = encodeURI(csvContent);
         let link = document.createElement("a");
         link.setAttribute("href", encodedUri);
-        link.setAttribute("download", `Gunluk_Satis_${new Date().toLocaleDateString("tr-TR")}.csv`);
+        link.setAttribute("download", `Satis_${aktifMarket}_${new Date().toLocaleDateString("tr-TR")}.csv`);
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
