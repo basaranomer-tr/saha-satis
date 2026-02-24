@@ -20,7 +20,7 @@
         .screen.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* 1. EKRAN */
+        /* GİRİŞ EKRANI */
         #login-screen { text-align: center; margin-top: 15vh; }
         .logo { max-width: 200px; margin-bottom: 30px; border-radius: 10px; }
         .login-box { background: var(--bg-card); padding: 30px 20px; border-radius: 16px; border: 1px solid var(--border-color); box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
@@ -29,7 +29,7 @@
         .login-input:focus { border-color: var(--accent); }
         .btn-start { width: 100%; padding: 16px; font-size: 18px; font-weight: bold; background: var(--accent-green); color: white; border: none; border-radius: 10px; cursor: pointer; }
 
-        /* 2. EKRAN */
+        /* SATIŞ EKRANI */
         .market-header { background: var(--bg-card); padding: 15px; border-radius: 12px; margin-bottom: 20px; text-align: center; font-size: 20px; font-weight: bold; color: #fff; border: 1px solid var(--border-color); }
         .market-header span { color: var(--accent-green); }
 
@@ -41,7 +41,10 @@
         
         .product-list { padding: 5px 15px; background: var(--bg-card); }
         .product { display: flex; justify-content: space-between; align-items: center; padding: 15px 0; border-bottom: 1px solid var(--border-color); }
-        .product-name { font-size: 16px; font-weight: 600; color: var(--text-light); flex: 1; }
+        
+        .product-info { flex: 1; display: flex; flex-direction: column; }
+        .product-name { font-size: 15px; font-weight: 600; color: var(--text-light); }
+        .product-meta { font-size: 11px; color: var(--accent); margin-top: 4px; font-weight: bold; }
         
         .controls { display: flex; align-items: center; gap: 12px; background: var(--bg-main); padding: 5px; border-radius: 10px; border: 1px solid var(--border-color); }
         .controls button { width: 35px; height: 35px; font-size: 22px; border: none; border-radius: 8px; cursor: pointer; color: white; display: flex; align-items: center; justify-content: center; }
@@ -74,66 +77,8 @@
 
 <div id="sales-screen" class="screen">
     <div class="market-header">📍 <span id="displayMarketName">Market Adı</span></div>
-
-    <details open>
-        <summary>🥃 Viskiler</summary>
-        <div class="product-list" id="cat-viski">
-            <div class="product" data-name="Jack Daniels 70cl">
-                <div class="product-name">Jack Daniels 70cl</div>
-                <div class="controls">
-                    <button class="btn-minus" onclick="updateCount(this, -1)">-</button><span class="count">0</span><button class="btn-plus" onclick="updateCount(this, 1)">+</button>
-                </div>
-            </div>
-            <div class="add-new-product">
-                <input type="text" class="new-product-input" placeholder="Yeni viski ekle..."><button class="btn-add-new" onclick="yeniUrunEkle(this)">+ Ekle</button>
-            </div>
-        </div>
-    </details>
-
-    <details>
-        <summary>🧊 Votkalar</summary>
-        <div class="product-list" id="cat-votka">
-            <div class="product" data-name="Absolut 70cl">
-                <div class="product-name">Absolut 70cl</div>
-                <div class="controls">
-                    <button class="btn-minus" onclick="updateCount(this, -1)">-</button><span class="count">0</span><button class="btn-plus" onclick="updateCount(this, 1)">+</button>
-                </div>
-            </div>
-            <div class="add-new-product">
-                <input type="text" class="new-product-input" placeholder="Yeni votka ekle..."><button class="btn-add-new" onclick="yeniUrunEkle(this)">+ Ekle</button>
-            </div>
-        </div>
-    </details>
-
-    <details>
-        <summary>🍺 Biralar</summary>
-        <div class="product-list" id="cat-bira">
-            <div class="product" data-name="Efes Pilsen 50cl Şişe">
-                <div class="product-name">Efes Pilsen 50cl Şişe</div>
-                <div class="controls">
-                    <button class="btn-minus" onclick="updateCount(this, -1)">-</button><span class="count">0</span><button class="btn-plus" onclick="updateCount(this, 1)">+</button>
-                </div>
-            </div>
-            <div class="add-new-product">
-                <input type="text" class="new-product-input" placeholder="Yeni bira ekle..."><button class="btn-add-new" onclick="yeniUrunEkle(this)">+ Ekle</button>
-            </div>
-        </div>
-    </details>
-
-    <details>
-        <summary>🍷 Şaraplar</summary>
-        <div class="product-list" id="cat-sarap">
-            <div class="product" data-name="Kavaklıdere Yakut 75cl">
-                <div class="product-name">Kavaklıdere Yakut 75cl</div>
-                <div class="controls">
-                    <button class="btn-minus" onclick="updateCount(this, -1)">-</button><span class="count">0</span><button class="btn-plus" onclick="updateCount(this, 1)">+</button>
-                </div>
-            </div>
-            <div class="add-new-product">
-                <input type="text" class="new-product-input" placeholder="Yeni şarap ekle..."><button class="btn-add-new" onclick="yeniUrunEkle(this)">+ Ekle</button>
-            </div>
-        </div>
-    </details>
+    
+    <div id="dinamik-kategoriler"></div>
 
     <div class="bottom-bar">
         <button class="action-btn btn-save" onclick="kaydetVeGonder()">☁️ Ziyareti Bitir (Buluta Gönder)</button>
@@ -148,15 +93,191 @@
     const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxfQigQbYnvyUF5TkWJGKARK9_Xnrrf6XYUwZUc5nfEg0Atrk4x5mdITBjyqEpEapWURQ/exec";
     let aktifMarket = "";
 
-    // --- OTOMATİK HAFIZA FONKSİYONLARI ---
+    // KANER ÜRÜN VERİTABANI (Yengenin listesi eksiksiz işlendi)
+    const katalog = {
+        "🥃 Viskiler": [
+            { ad: "Chivas Regal 12 Y.O. 100cl", kat: "Deluxe Viski", firma: "Gıda Ltd." },
+            { ad: "J.W Black Label 100 cl.", kat: "Deluxe Viski", firma: "Kaner" },
+            { ad: "Jack Daniels 100cl", kat: "Deluxe Viski", firma: "R. Cemil" },
+            { ad: "Kaner Deluxe Whisky", kat: "Deluxe Viski", firma: "Kaner" },
+            { ad: "Other Deluxe Whisky", kat: "Deluxe Viski", firma: "Diğer" },
+            { ad: "Jameson 100cl", kat: "Standart Viski", firma: "Gıda Ltd." },
+            { ad: "J.W Red Label 100 cl.", kat: "Standart Viski", firma: "Kaner" },
+            { ad: "J&B 100 cl.", kat: "Standart Viski", firma: "Kaner" },
+            { ad: "Ballantines 100cl", kat: "Standart Viski", firma: "Gıda Ltd." },
+            { ad: "White Horse 100 cl.", kat: "Standart Viski", firma: "Kaner" },
+            { ad: "Bells 100 cl.", kat: "Standart Viski", firma: "Kaner" },
+            { ad: "The Famous Grouse 100 cl", kat: "Standart Viski", firma: "R. Cemil" },
+            { ad: "Grants Whisky 100cl.", kat: "Standart Viski", firma: "O.Shevket" },
+            { ad: "Other Standart Whisky", kat: "Standart Viski", firma: "Kaner" },
+            { ad: "Teacher's 100cl", kat: "Low end Viski", firma: "Özmerhan" },
+            { ad: "Scotch Blue 70cl", kat: "Low end Viski", firma: "Ertan" },
+            { ad: "Black & White  70 cl.", kat: "Low end Viski", firma: "Kaner" },
+            { ad: "Vat 69 70 cl.", kat: "Low end Viski", firma: "Kaner" },
+            { ad: "Clan McGregor 70cl.", kat: "Low end Viski", firma: "O.Shevket" },
+            { ad: "Passport 70cl.", kat: "Low end Viski", firma: "Özmerhan" },
+            { ad: "100 Pipers Scotch Whisky 70cl", kat: "Low end Viski", firma: "Gıda Ltd." },
+            { ad: "Label 5 70cl", kat: "Low end Viski", firma: "Ekin Adademir" }
+        ],
+        "🍸 Cinler": [
+            { ad: "Bombay Sapphire 100cl", kat: "Gin", firma: "R. Cemil" },
+            { ad: "Gordon's 100 cl", kat: "Gin", firma: "Kaner" },
+            { ad: "Beefeater Gin 100 cl", kat: "Gin", firma: "Gıda Ltd." },
+            { ad: "Hendrick's Gin 70cl", kat: "Gin", firma: "O.Shevket" },
+            { ad: "Tanqueray London 70cl", kat: "Gin", firma: "Kaner" },
+            { ad: "Gibson's Gin 100cl", kat: "Gin", firma: "Ekin Adademir" },
+            { ad: "Gilbey's Gin 70cl", kat: "Gin", firma: "Kaner" },
+            { ad: "Other Cin", kat: "Gin", firma: "Kaner" }
+        ],
+        "🧊 Votkalar": [
+            { ad: "Absolut Vodka Blue 100 cl", kat: "Votka", firma: "Gıda Ltd." },
+            { ad: "Smirnoff Red 100 cl", kat: "Votka", firma: "Kaner" },
+            { ad: "Finlandia Vodka 100cl", kat: "Votka", firma: "R. Cemil" },
+            { ad: "NEMIROFF ORIGINAL 100cl", kat: "Votka", firma: "O.Shevket" },
+            { ad: "İstanblue 100cl", kat: "Votka", firma: "Kaner" },
+            { ad: "Kaner Votka", kat: "Votka", firma: "Kaner" },
+            { ad: "Other Votka", kat: "Votka", firma: "Diğer" }
+        ],
+        "🏴‍☠️ Romlar": [
+            { ad: "Captain Morgan White 100cl", kat: "Rom", firma: "Kaner" },
+            { ad: "Bacardi Carta Blanca 100cl", kat: "Rom", firma: "R. Cemil" },
+            { ad: "Havana CLUB", kat: "Rom", firma: "R. Cemil" },
+            { ad: "Kaner Rom", kat: "Rom", firma: "Kaner" },
+            { ad: "Other Rom", kat: "Rom", firma: "Diğer" }
+        ],
+        "🥛 Rakılar": [
+            { ad: "Beylerbeyi Göbek 2*100cl", kat: "Rakı", firma: "Oero" },
+            { ad: "Beylerbeyi Göbek 100cl", kat: "Rakı", firma: "Oero" },
+            { ad: "Tekirdağ Altın 2*100cl", kat: "Rakı", firma: "Kaner" },
+            { ad: "Tekirdağ Altın 100cl.", kat: "Rakı", firma: "Kaner" },
+            { ad: "Tekirdağ Göbek 2x100cl", kat: "Rakı", firma: "Kaner" },
+            { ad: "Tekirdağ Göbek 100cl", kat: "Rakı", firma: "Kaner" },
+            { ad: "Tekirdağ 100cl.", kat: "Rakı", firma: "Kaner" },
+            { ad: "TEKİRDAĞ GOLD RESERVE", kat: "Rakı", firma: "Kaner" },
+            { ad: "Yeni Rakı Rezerv", kat: "Rakı", firma: "Kaner" },
+            { ad: "Yeni Rakı Uzun Demleme 100cl.", kat: "Rakı", firma: "Kaner" },
+            { ad: "Yeni Rakı Ala 100cl", kat: "Rakı", firma: "Kaner" },
+            { ad: "Yeni Rakı Ustaların Karışımı 70cl", kat: "Rakı", firma: "Kaner" },
+            { ad: "Yeni Rakı Yeni Seri  100 cl.", kat: "Rakı", firma: "Kaner" },
+            { ad: "Yeni Rakı 100 cl.", kat: "Rakı", firma: "Kaner" },
+            { ad: "Efe Gold 100 cl", kat: "Rakı", firma: "Sener" },
+            { ad: "Efe Göbek 100cl", kat: "Rakı", firma: "Sener" },
+            { ad: "Efe mavi klasik 70 cl.", kat: "Rakı", firma: "Sener" },
+            { ad: "Efe yaş üzüm yeşil 100 cl.", kat: "Rakı", firma: "Sener" },
+            { ad: "Efe mavi klasik 100 cl.", kat: "Rakı", firma: "Sener" },
+            { ad: "Saki Gurme 100cl", kat: "Rakı", firma: "Gıda Ltd." },
+            { ad: "Saki Siyah Seri 70cl", kat: "Rakı", firma: "Gıda Ltd." },
+            { ad: "Mercan Rakı 100cl", kat: "Rakı", firma: "Özmerhan" },
+            { ad: "Anadolu Rakı 0 Serisi 100cl", kat: "Rakı", firma: "Mey içki" },
+            { ad: "Other Rakı", kat: "Rakı", firma: "Diğer" }
+        ],
+        "🍷 Şaraplar": [
+            { ad: "CIELO 1908 PINOT GRIGIO 150 CL", kat: "Wine", firma: "Kaner" },
+            { ad: "CIELO 1908 CHARDONNAY 150 CL", kat: "Wine", firma: "Kaner" },
+            { ad: "CIELO 1908 MERLOT 150 CL", kat: "Wine", firma: "Kaner" },
+            { ad: "CIELO 1908 PINOT GRIGIO 75 CL", kat: "Wine", firma: "Kaner" },
+            { ad: "CIELO 1908 CHARDONNAY 75 CL", kat: "Wine", firma: "Kaner" },
+            { ad: "CIELO 1908 MERLOT 75 CL", kat: "Wine", firma: "Kaner" },
+            { ad: "CIELO 1908 SAUVIGNON VENETO 75 CL", kat: "Wine", firma: "Kaner" },
+            { ad: "CIELO 1908 PINOT GRIGIO BLUSH 75 CL", kat: "Wine", firma: "Kaner" },
+            { ad: "CIELO 1908 ROSATO 75 CL", kat: "Wine", firma: "Kaner" },
+            { ad: "CIELO 1908 PROSECCO BIANCO 75 CL", kat: "Wine", firma: "Kaner" },
+            { ad: "CIELO 1908 PROSECCO ROSE 75 CL", kat: "Wine", firma: "Kaner" },
+            { ad: "MATEUS ORIGINAL ROSE 150CL", kat: "Wine", firma: "O.Shevket" },
+            { ad: "PASQUA PINOT GRIGIO IGT WHITE 150CL", kat: "Wine", firma: "O.Shevket" },
+            { ad: "PASQUA SOAVE DOC WHITE  150CL", kat: "Wine", firma: "O.Shevket" },
+            { ad: "PASQUA MERLOT VENEZİA IGT KIRMIZI 150 CL", kat: "Wine", firma: "O.Shevket" },
+            { ad: "PASQUA PINOT GRIGIO IGT WHITE 75CL", kat: "Wine", firma: "O.Shevket" },
+            { ad: "PASQUA SOAVE DOC WHITE 75CL", kat: "Wine", firma: "O.Shevket" },
+            { ad: "PASQUA MERLOT VENEZİA IGT KIRMIZI 75CL", kat: "Wine", firma: "O.Shevket" },
+            { ad: "PASQUA PINOT GRIGIO ROSE 75CL", kat: "Wine", firma: "O.Shevket" },
+            { ad: "MAISON CASTEL MERLOT RED 75CL", kat: "Wine", firma: "O.Shevket" },
+            { ad: "MAISON CASTEL CHARDONNAY WHITE 75CL", kat: "Wine", firma: "O.Shevket" },
+            { ad: "MAISON CASTEL SAUVIGNON BLANC WHITE 75CL", kat: "Wine", firma: "O.Shevket" },
+            { ad: "MAISON CASTEL MERLOT ROSE 75cl", kat: "Wine", firma: "O.Shevket" },
+            { ad: "Kanere Wine", kat: "Wine", firma: "Kaner" },
+            { ad: "Other Wine", kat: "Wine", firma: "Diğer" }
+        ],
+        "🥃 Likörler": [
+            { ad: "BAILEY'S", kat: "Liqueur", firma: "Kaner" },
+            { ad: "PIMM'S", kat: "Liqueur", firma: "Kaner" },
+            { ad: "SAFARI", kat: "Liqueur", firma: "Kaner" },
+            { ad: "SCHWARTZHOG", kat: "Liqueur", firma: "Kaner" },
+            { ad: "MOLLY'S", kat: "Liqueur", firma: "Gıda Ltd." },
+            { ad: "JAGER", kat: "Liqueur", firma: "R. Cemil" },
+            { ad: "Kaner Liqueur", kat: "Liqueur", firma: "Kaner" },
+            { ad: "Other Liqueur", kat: "Liqueur", firma: "Diğer" }
+        ],
+        "🌵 Tekilalar": [
+            { ad: "DON JULIO", kat: "Tequila", firma: "Kaner" },
+            { ad: "OLMECA", kat: "Tequila", firma: "Gıda Ltd." },
+            { ad: "SİERA", kat: "Tequila", firma: "R. Cemil" }
+        ]
+    };
+
+    // SAYFA YÜKLENİNCE DİNAMİK ARAYÜZÜ OLUŞTUR
+    function arayuzOlustur() {
+        let container = document.getElementById("dinamik-kategoriler");
+        let ilkSekme = true;
+
+        for (const [kategoriAdi, urunler] of Object.entries(katalog)) {
+            let catId = "cat-" + kategoriAdi.replace(/[^a-zA-Z0-9]/g, "");
+            
+            let details = document.createElement("details");
+            if (ilkSekme) { details.setAttribute("open", ""); ilkSekme = false; }
+            
+            details.innerHTML = `<summary>${kategoriAdi}</summary>`;
+            
+            let listDiv = document.createElement("div");
+            listDiv.className = "product-list";
+            listDiv.id = catId;
+
+            urunler.forEach(u => {
+                let pDiv = document.createElement("div");
+                pDiv.className = "product";
+                pDiv.setAttribute("data-name", u.ad);
+                pDiv.setAttribute("data-kat", u.kat);
+                pDiv.setAttribute("data-firma", u.firma);
+
+                pDiv.innerHTML = `
+                    <div class="product-info">
+                        <div class="product-name">${u.ad}</div>
+                        <div class="product-meta">${u.kat} | ${u.firma}</div>
+                    </div>
+                    <div class="controls">
+                        <button class="btn-minus" onclick="updateCount(this, -1)">-</button>
+                        <span class="count">0</span>
+                        <button class="btn-plus" onclick="updateCount(this, 1)">+</button>
+                    </div>
+                `;
+                listDiv.appendChild(pDiv);
+            });
+
+            // "Yeni Ekle" Butonu
+            let yeniUrunDiv = document.createElement("div");
+            yeniUrunDiv.className = "add-new-product";
+            yeniUrunDiv.innerHTML = `
+                <input type="text" class="new-product-input" placeholder="Yeni ekle...">
+                <button class="btn-add-new" onclick="yeniUrunEkle(this, '${urunler[0].kat}')">+ Ekle</button>
+            `;
+            listDiv.appendChild(yeniUrunDiv);
+
+            details.appendChild(listDiv);
+            container.appendChild(details);
+        }
+    }
+
+    // --- OTOMATİK HAFIZA ---
     function hafizayaYaz() {
         let state = { market: aktifMarket, products: [] };
         document.querySelectorAll('.product').forEach(p => {
             let catId = p.closest('.product-list').id;
             let name = p.getAttribute('data-name');
+            let kat = p.getAttribute('data-kat');
+            let firma = p.getAttribute('data-firma');
             let count = parseInt(p.querySelector('.count').innerText);
             let isCustom = p.classList.contains('custom-product');
-            state.products.push({ catId, name, count, isCustom });
+            state.products.push({ catId, name, kat, firma, count, isCustom });
         });
         localStorage.setItem('satisHafizasi', JSON.stringify(state));
     }
@@ -180,8 +301,13 @@
                     let newProduct = document.createElement('div');
                     newProduct.className = 'product custom-product';
                     newProduct.setAttribute('data-name', p.name);
+                    newProduct.setAttribute('data-kat', p.kat);
+                    newProduct.setAttribute('data-firma', p.firma);
                     newProduct.innerHTML = `
-                        <div class="product-name">${p.name}</div>
+                        <div class="product-info">
+                            <div class="product-name">${p.name}</div>
+                            <div class="product-meta">${p.kat} | ${p.firma}</div>
+                        </div>
                         <div class="controls">
                             <button class="btn-minus" onclick="updateCount(this, -1)">-</button>
                             <span class="count">${p.count}</span>
@@ -197,10 +323,11 @@
         }
     }
 
-    // Sayfa Yüklenince Hafızayı Çek
-    window.onload = hafizadanYukle;
+    window.onload = function() {
+        arayuzOlustur();
+        hafizadanYukle();
+    };
 
-    // --- TEMEL FONKSİYONLAR ---
     function ziyareteBasla() {
         let val = document.getElementById("marketInput").value.trim();
         if(!val) { alert("Lütfen market adı girin!"); return; }
@@ -215,13 +342,10 @@
     function updateCount(btn, change) {
         let countSpan = btn.parentElement.querySelector('.count');
         let val = parseInt(countSpan.innerText) + change;
-        if (val >= 0) {
-            countSpan.innerText = val;
-            hafizayaYaz(); // Her tıklamada hafızayı güncelle
-        }
+        if (val >= 0) { countSpan.innerText = val; hafizayaYaz(); }
     }
 
-    function yeniUrunEkle(btn) {
+    function yeniUrunEkle(btn, defaultKat) {
         let input = btn.previousElementSibling; 
         let urunAdi = input.value.trim(); 
         if (!urunAdi) { alert("Ürün adı yazın!"); return; }
@@ -231,18 +355,33 @@
         let newProduct = document.createElement('div');
         newProduct.className = 'product custom-product';
         newProduct.setAttribute('data-name', urunAdi);
-        newProduct.innerHTML = `<div class="product-name">${urunAdi}</div><div class="controls"><button class="btn-minus" onclick="updateCount(this, -1)">-</button><span class="count">0</span><button class="btn-plus" onclick="updateCount(this, 1)">+</button></div>`;
-
+        newProduct.setAttribute('data-kat', defaultKat || "Özel Kategori");
+        newProduct.setAttribute('data-firma', "Manuel Eklendi");
+        newProduct.innerHTML = `
+            <div class="product-info">
+                <div class="product-name">${urunAdi}</div>
+                <div class="product-meta">${defaultKat || "Özel"} | Manuel Eklendi</div>
+            </div>
+            <div class="controls"><button class="btn-minus" onclick="updateCount(this, -1)">-</button><span class="count">0</span><button class="btn-plus" onclick="updateCount(this, 1)">+</button></div>
+        `;
         productList.insertBefore(newProduct, addNewDiv);
         input.value = "";
-        hafizayaYaz(); // Yeni eklenen ürünü de hafızaya kaydet
+        hafizayaYaz(); 
     }
 
     function satislarıTopla() {
         let satilanlar = [];
         document.querySelectorAll('.product').forEach(p => {
             let adet = parseInt(p.querySelector('.count').innerText);
-            if (adet > 0) satilanlar.push({ market: aktifMarket, urun: p.getAttribute('data-name'), adet: adet });
+            if (adet > 0) {
+                satilanlar.push({ 
+                    market: aktifMarket, 
+                    urun: p.getAttribute('data-name'), 
+                    kategori: p.getAttribute('data-kat'),
+                    firma: p.getAttribute('data-firma'),
+                    adet: adet 
+                });
+            }
         });
         return satilanlar;
     }
@@ -258,14 +397,11 @@
         .then(response => {
             alert("✅ Ziyaret Kaydedildi!");
             btn.innerText = "☁️ Ziyareti Bitir (Buluta Gönder)";
-            
-            // Başarılı olunca sistemi sıfırla ve HAFIZAYI TEMİZLE
             localStorage.removeItem('satisHafizasi');
             document.querySelectorAll('.count').forEach(c => c.innerText = "0");
-            document.querySelectorAll('.custom-product').forEach(c => c.remove()); // Eklenen özel ürünleri sil
+            document.querySelectorAll('.custom-product').forEach(c => c.remove()); 
             document.getElementById("marketInput").value = "";
             aktifMarket = "";
-            
             document.getElementById("sales-screen").classList.remove("active");
             document.getElementById("login-screen").classList.add("active");
             window.scrollTo(0, 0); 
@@ -275,13 +411,8 @@
         });
     }
 
-    // Sayfa Yanlışlıkla Kapanırsa Uyarı Ver
     window.addEventListener('beforeunload', function (e) {
-        let satilanlar = satislarıTopla();
-        if (satilanlar.length > 0) {
-            e.preventDefault();
-            e.returnValue = '';
-        }
+        if (satislarıTopla().length > 0) { e.preventDefault(); e.returnValue = ''; }
     });
 
     function whatsappPaylas() {
@@ -292,11 +423,19 @@
         window.location.href = `https://api.whatsapp.com/send?text=${encodeURIComponent(metin)}`;
     }
 
+    // EXCEL ÇIKTISI TAMAMEN YENİLENDİ VE FORMATLANDI
     function gunlukExcelIndir() {
         let satilanlar = satislarıTopla();
         if (satilanlar.length === 0) { alert("Veri yok!"); return; }
-        let csvContent = "data:text/csv;charset=utf-8,\uFEFFTarih;Market;Ürün;Adet\n";
-        satilanlar.forEach(s => { csvContent += `${new Date().toLocaleDateString("tr-TR")};${s.market};${s.urun};${s.adet}\n`; });
+        
+        // BAŞLIKLAR YENİ FORMA GÖRE AYARLANDI
+        let csvContent = "data:text/csv;charset=utf-8,\uFEFFTarih;Market;Ürün Adı;KATEGORİ;FİRMA;Adet\n";
+        
+        satilanlar.forEach(s => { 
+            let tarih = new Date().toLocaleDateString("tr-TR");
+            csvContent += `${tarih};${s.market};${s.urun};${s.kategori};${s.firma};${s.adet}\n`; 
+        });
+        
         let link = document.createElement("a");
         link.setAttribute("href", encodeURI(csvContent));
         link.setAttribute("download", `Satis_${aktifMarket}_${new Date().toLocaleDateString("tr-TR")}.csv`);
