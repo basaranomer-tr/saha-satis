@@ -102,7 +102,7 @@
 
 <script>
     // --- LİNKİNİ BURAYA YAPIŞTIR ---
-    const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxfQigQbYnvyUF5TkWJGKARK9_Xnrrf6XYUwZUc5nfEg0Atrk4x5mdITBjyqEpEapWURQ/exec";
+    const GOOGLE_SCRIPT_URL = "BURAYA_GOOGLE_APPS_SCRIPT_LINKINI_YAPISTIR";
     let aktifMarket = "";
 
     const katalog = {
@@ -308,7 +308,7 @@
                 state.products.forEach(p => {
                     if (p.isCustom) {
                         let productList = document.getElementById(p.catId);
-                        if(!productList) return; // Eski id hatası engellemesi
+                        if(!productList) return; 
                         let addNewDiv = productList.querySelector('.add-new-product');
                         let newProduct = document.createElement('div');
                         newProduct.className = 'product custom-product';
@@ -334,7 +334,6 @@
                 });
             }
         } catch(e) {
-            // Eğer eski versiyon verisiyle uyumsuzluk varsa hafızayı temizle ve devam et
             localStorage.removeItem('satisHafizasi');
         }
     }
@@ -387,6 +386,7 @@
         hafizayaYaz(); 
     }
 
+    // Bulut ve WP için sadece satılanlar
     function satislarıTopla() {
         let satilanlar = [];
         document.querySelectorAll('.product').forEach(p => {
@@ -439,18 +439,34 @@
         window.location.href = `https://api.whatsapp.com/send?text=${encodeURIComponent(metin)}`;
     }
 
+    // EXCEL İÇİN TÜM LİSTEYİ TOPLAYAN YENİ FONKSİYON
     function gunlukExcelIndir() {
-        let satilanlar = satislarıTopla();
-        if (satilanlar.length === 0) { alert("İndirilecek veri yok!"); return; }
+        if (!aktifMarket) { alert("Önce ziyarete başlayın!"); return; }
+        
+        // Tablo başlıkları
         let csvContent = "data:text/csv;charset=utf-8,\uFEFFTarih;Market;Ürün Adı;KATEGORİ;FİRMA;Adet\n";
-        satilanlar.forEach(s => { 
-            let tarih = new Date().toLocaleDateString("tr-TR");
-            csvContent += `${tarih};${s.market};${s.urun};${s.kategori};${s.firma};${s.adet}\n`; 
+        let tarih = new Date().toLocaleDateString("tr-TR");
+
+        // Bütün ürünleri dönüyor (satılan/satılmayan)
+        document.querySelectorAll('.product').forEach(p => {
+            let urun = p.getAttribute('data-name');
+            let kategori = p.getAttribute('data-kat');
+            let firma = p.getAttribute('data-firma');
+            let adet = parseInt(p.querySelector('.count').innerText);
+            
+            // Eğer adet 0'dan büyükse yaz, değilse tamamen BOŞ ("") bırak
+            let yaziAdet = adet > 0 ? adet : "";
+
+            csvContent += `${tarih};${aktifMarket};${urun};${kategori};${firma};${yaziAdet}\n`;
         });
+
+        // Dosyayı İndirtme Komutu
         let link = document.createElement("a");
         link.setAttribute("href", encodeURI(csvContent));
-        link.setAttribute("download", `Satis_${aktifMarket}_${new Date().toLocaleDateString("tr-TR")}.csv`);
-        document.body.appendChild(link); link.click(); document.body.removeChild(link);
+        link.setAttribute("download", `Tum_Liste_Raporu_${aktifMarket}_${tarih}.csv`);
+        document.body.appendChild(link); 
+        link.click(); 
+        document.body.removeChild(link);
     }
 </script>
 
